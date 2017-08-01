@@ -22,7 +22,7 @@
 			安装完后，在config里面找到httpd.conf文件 将Document后的目录中的后缀改成php/www
 			在www文件中新建1.txt作文测试文件
 			在浏览器中输入localhost/1.txt，测试文件是否成功
-#### ajax交互模型（实现原理，实现机制）####
+#### ajax交互模型（实现原理，实现机制） ####
 打电话机制：  
 &emsp;&emsp;&emsp;1.买部手机  
 &emsp;&emsp;&emsp;2.输入电话号码  
