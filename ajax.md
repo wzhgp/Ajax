@@ -13,9 +13,12 @@
 			<age>23</age>
 		</person>'
 	例2：'{name:"小青",age:18}'
+	注：如何处理像例1那样的xml的数据->ajax.responseXML（专门用来解析xml数据的）
   
-**注：1.不管什么格式，服务器返回来的数据都是字符串。**  
-**&emsp;&emsp;2.不能再本地运行代码，因为后端的文件必须要在服务器下运行**    
+**注：1.不管什么格式，服务器返回来的数据都是字符串**  
+**&emsp;&emsp;2.目前的数据格式有XML和JSON**   
+**&emsp;&emsp;3.不能再本地运行代码，因为后端的文件必须要在服务器下运行** 
+
 ****
 **关于安装服务器：**  
 	&emsp;&emsp; 安装服务器，不能是在中文目录下，文件名也必须是英文或数字
@@ -31,20 +34,21 @@
 &emsp;&emsp;&emsp;5.通话  
 #### JS-ajax语法 ####
 语法：ajax.open(method,url,[boolean])  
-参数：method:用什么凡是请求
-		get:
-		post:
+参数：method:用什么凡是请求  
+		get:  
+		post:  
 url:请求的地址
 boolean:是否异步，默认为true/无需写，本身就是异步模式  
 注：post和get的区别：  
 &emsp;&emsp;post:   
 &emsp;&emsp;&emsp;1.通过send发送前端数据给后端  
-&emsp;&emsp;&emsp;2.相对安全(关于y用户的信息会用post)   
+&emsp;&emsp;&emsp;2.相对安全(关于用户的信息会用post)，在newWork中不显示向传递的信息    
 &emsp;&emsp;&emsp;3.体积来说是无限大(后台会限制)  
-&emsp;&emsp;&emsp;4.在send()前要设置请求头：setRequestHeader();  
+&emsp;&emsp;&emsp;4.在send()前要设置请求头：setRequestHeader(); 
+&emsp;&emsp;&emsp;&emsp;setRequestHeader("Content-Type","application/x-www-form-urlencoded")  
 &emsp;&emsp;get:  
 &emsp;&emsp;&emsp;1.通过浏览器的url来发送数据给后端   
-&emsp;&emsp;&emsp;2.相对来说不安全(只有不跟用户信息打交道或者在数据一定范围都可以使用get,更普遍)  
+&emsp;&emsp;&emsp;2.相对来说不安全(只有不跟用户信息打交道或者在数据一定范围都可以使用get,更普遍) ，在newWork会看到传递给后台的信息   
 &emsp;&emsp;&emsp;3.体积受**浏览器**限制  
 &emsp;&emsp;&emsp;4.在IE浏览器下，中文会被解析为URL编码格式，所有容易出问题，要用encodeURI()转一下
 #### jQ-ajax语法 ####
@@ -64,6 +68,7 @@ $.ajax({
 		var ajax = new XMLHttpRequest; 
 	2.请求地址：
 		 ajax.open('get','通信的后端地址?user='+xx.value')；
+		//只要是通过url向后台传输数据，就必须加？
 	3.发送：
 		ajax.send();
 	4.等待服务器响应：
@@ -129,7 +134,10 @@ $.ajax({
 				$('span').text(data)
 			}
 		});
-	})
+	})  
+注：在低版本IE浏览器下，不识别传给后端字符串的数据，所以需要格式转化：  
+&emsp;&emsp;&emsp;汉字转url码：encodeURI(要转的内容)  
+&emsp;&emsp;&emsp;url码转汉字：decodeURI(要转的URL码)
 	
 		
 
