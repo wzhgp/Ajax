@@ -44,8 +44,8 @@ boolean:是否异步，默认为true/无需写，本身就是异步模式
 &emsp;&emsp;&emsp;1.通过send发送前端数据给后端  
 &emsp;&emsp;&emsp;2.相对安全(关于用户的信息会用post)，在newWork中不显示向传递的信息    
 &emsp;&emsp;&emsp;3.体积来说是无限大(后台会限制)  
-&emsp;&emsp;&emsp;4.在send()前要设置请求头：setRequestHeader(); 
-&emsp;&emsp;&emsp;&emsp;setRequestHeader("Content-Type","application/x-www-form-urlencoded")  
+&emsp;&emsp;&emsp;4.在send()前要设置请求头：setRequestHeader(),在单纯上传数据(表单file)的时候不用设置请求头;   
+&emsp;&emsp;&emsp;&emsp;请求的设置：setRequestHeader("Content-Type","application/x-www-form-urlencoded") / setRequestHeader("Content-Type","")  
 &emsp;&emsp;get:  
 &emsp;&emsp;&emsp;1.通过浏览器的url来发送数据给后端   
 &emsp;&emsp;&emsp;2.相对来说不安全(只有不跟用户信息打交道或者在数据一定范围都可以使用get,更普遍) ，在newWork会看到传递给后台的信息   

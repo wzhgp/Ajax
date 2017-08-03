@@ -156,6 +156,15 @@ XMLHttpRequest的三个重要属性
 		return obj
 	}
 	console.log(stringToobj(str))
+#### 解析一个JSON字符串的三种方法 ####
+	1.JSON.parse(string)
+	2.eval()
+	3.new Function()()
+	注：var obj = "{'name':123}";
+		1.JSON.parse只能转标准的json。如：'{"name":"小明"，"性别":"男"}'；
+		2.eval(),能够让字符串执行代码
+			例：eval('('+obj+')')
+		3.new Function('','return'+obj)
 #### 自己ajax ####
 	function ajax(json){
 	//配置默认参数
@@ -215,6 +224,56 @@ XMLHttpRequest的三个重要属性
 		}
 	}
 }
+#### 自己ajax-Promise ####
+	function ajax(json){
+		return new Promise(function(resolve,reject){
+			var settings = {
+				url:'',
+				method:'get',
+				dataType:'string',
+				data:{}
+			}
+			Object.assign(settings,json);
+			var arr = [];
+			for(attr in settings.data){
+				arr.push(attr+'='+settings.data[attr]);
+			}
+			settings.data = arr.join('&');
+			var ajax = new XMLHttpRequest;
+			if(settings.method.toLowerCase() == 'get'){
+				ajax.open('get',settings.url+'?'+settings.data);
+				ajax.send();
+			}else if(settings.method.toLowerCase() == 'post'){
+				ajax.open('post',settings.url);
+				ajax.setRequestHeader("Content-Type','application/x-www-form-urlencoded");
+				ajax.send(settings.data);
+			}else{
+				alert('nonono')
+			}
+			ajax.onreadystatechange = function(){
+				if(ajax.readyState == 4){
+					if(ajax.status >=200 & ajax.status<=207 || ajax.status == 304){
+						//成功
+						if(settings.dataType == 'string'){
+							resolve(ajax.responseText)
+						}
+						if(settings.dataType == 'json'){
+							resolve(new Function('','return'+ajax.responseText)())
+						}
+						if(settings.dataType == 'xml'){
+							resolve(ajax.responseXML)
+						}else{
+							resolve('请核对信息')
+						}
+					}else{
+						//失败
+						reject({state:ajax.readyState,status:ajax.status})
+					}
+				}
+			}
+		
+		})	
+	}
 
 	
 		
