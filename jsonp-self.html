@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<style type="text/css">
+			a{
+				text-decoration: none;
+				color: #999;
+			}
+			li{
+				list-style: none;	
+				margin-bottom: 10px;
+			}
+		</style>
+		<!--
+			jsonp:
+				1.格式即为函数名+()
+				2.后台传输回来的数据一定是函数名+()形式的
+				3.即要在**全局**声明的函数的函数名必须跟传递回来的相同->也就是说，前端可以定函数名传给后端，以callback形式
+			封装jsonp需要注意的几点：
+				1.放在**全局**的**函数名**不应该是固定的，以便用于不同的场景调用不同的函数
+				2.数据需要传给后端：
+					ulr,请求的地址：
+					请求接口后端口的信息，即全局定义的函数名->callback/cb..
+					要传输的**内容**->word/w..
+		-->
+	</head>
+	<body>
+		<input type="text" id = "txt"/>
+		<ul id="ul"></ul>
+		<script type="text/javascript">
+//			url:'https://sp0.baidu.com/5a1Fazu8AA54nxGko9WTAnF6hhy/su',
+//			url:'https://sug.so.360.cn/suggest',
+			txt.onkeyup = function(){
+				jsonp({
+//					url:'https://sp0.baidu.com/5a1Fazu8AA54nxGko9WTAnF6hhy/su',
+					url:'https://sug.so.360.cn/suggest',
+					data:{
+//						wd:txt.value
+						word:txt.value
+					},
+//					cb:'cb',
+					success:function(data){
+						console.log(data)
+						let html = ''
+						data.s.forEach((e,i)=>{
+							if(i<=4){
+//								html +=`<li><a _blank href="https://www.baidu.com/s?ie=utf-8&f=3&rsv_bp=0&rsv_idx=1&tn=baidu&wd=${e}&rsv_pq=e46af662000144de&rsv_t=05b5K0lgdbSwe3%2BQqeoROVFtJkgrU7K5RZxB91Ei751ROUdP15036F92MNU&rqlang=cn&rsv_enter=1&rsv_sug3=2&rsv_sug1=1&rsv_sug7=100&rsv_sug2=1&prefixsug=s&rsp=0&inputT=4679&rsv_sug4=5258">${e}</li>`;
+								html +=`<li><a _blank href="https://www.so.com/s?ie=utf-8&fr=none&src=home_suggst_3.2.2&q=${e}&eci=a795cf3817621843&nlpv=suggest_3.2.2">${e}</li>`;
+								ul.innerHTML = html;
+							}
+						})
+					}
+				})
+			};
+			function jsonp(json){
+				//设置默认值
+				let settings = {
+					url:'',
+					data:{},
+					cb:'callback',
+					success:function(){}
+				};
+				//自定义外部的fnName函数名,挂在全局下并将框架内获取到的data传出去给外部使用
+				let fnName = 'jQuery'+Math.random()+(+ new Date);
+				fnName = fnName.replace('0.','_');
+				window[fnName] = function(data){
+					settings.success(data);
+				}
+				//有配置走配置，没配置走默认
+				Object.assign(settings,json);
+				//把cb放到对象下面，一次性循环就能直接得到结果。
+				settings.data[settings.cb] = fnName;
+				//表单序列化
+				var arr = [];
+				for(let attr in settings.data){
+					arr.push(attr + '=' + settings.data[attr]);
+				}
+				var str = arr.join('&');
+				console.log(str);
+				//创建script标签，设置它的src属性
+				//str = wd=d&=jQuery_56970483458912381501911781014
+				let script = document.createElement('script');
+				script.src = settings.url+'?'+str;
+				document.getElementsByTagName('head')[0].appendChild(script);
+				//chrome支持remove()方法
+				script.remove();
+			}
+		</script>
+	</body>
+</html>
